@@ -26,7 +26,7 @@ BLESerial::BLESerial(unsigned char req, unsigned char rdy, unsigned char rst) :
   setAdvertisedServiceUuid(this->_uartService.uuid());
   addAttribute(this->_rxCharacteristic);
   addAttribute(this->_rxNameDescriptor);
-  this->_rxCharacteristic.setEventHandler(BLEWritten, (void(*)(BLECentral&, BLECharacteristic&))NULL);
+  this->_rxCharacteristic.setEventHandler(BLEWritten, BLESerial::_received); //this->_rxCharacteristic.setEventHandler(BLEWritten, (void(*)(BLECentral&, BLECharacteristic&))NULL);
   addAttribute(this->_txCharacteristic);
   addAttribute(this->_txNameDescriptor);
 }
@@ -47,7 +47,7 @@ void BLESerial::poll() {
 }
 
 void BLESerial::end() {
-  this->_rxCharacteristic.setEventHandler(BLEWritten, NULL);
+  this->_rxCharacteristic.setEventHandler(BLEWritten, (void(*)(BLECentral&, BLECharacteristic&))NULL); //this->_rxCharacteristic.setEventHandler(BLEWritten, NULL);
   this->_rxHead = this->_rxTail = 0;
   flush();
   BLEPeripheral::disconnect();
